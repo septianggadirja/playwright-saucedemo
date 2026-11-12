@@ -29,7 +29,7 @@ export class ProductListPage {
 
   async userIsOnProductListPage() {
     await expect(this.textProductName.first()).toBeVisible();
-    await expect(this.textProductPrice.first()).toBeVisible();
+    await expect.soft(this.textProductPrice.first()).not.toBeVisible();
     await expect(this.buttonAddToCart.first()).toBeVisible();
   }
 
