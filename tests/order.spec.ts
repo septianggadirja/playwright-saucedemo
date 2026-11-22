@@ -90,52 +90,59 @@ for (const orderData of checkoutData) {
   );
 }
 
-test("User add product from product detail page @test", async ({ page }) => {
-  const productList2Page = new ProductList2Page(page);
-  const productDetailPage = new ProductDetailPage(page);
-  const checkoutPage = new CheckoutPage(page);
-  const checkoutOverviewPage = new CheckoutOverviewPage(page);
-  const finishCheckoutPage = new FinishCheckoutPage(page);
-  const data = generateRandomData();
-  const cartPage = new CartPage(page);
-  await test.step("GIVEN User is on product list page", async () => {
-    await productList2Page.userIsOnProductList2Page();
-  });
-  await test.step("WHEN User add product to cart", async () => {
-    await productList2Page.goToProductDetailPage();
-    await productDetailPage.userIsOnProductDetailPage();
-    await productDetailPage.addProductToCart();
-    await productDetailPage.goToCartPage();
-    await cartPage.userIsOnCartPage();
-    await cartPage.verifyProductInCart(
-      productDetailPage.ProductName,
-      productDetailPage.ProductPrice,
-    );
-    await test.step("AND User click checkout button", async () => {
-      await cartPage.userClickCheckoutButton();
-      await checkoutPage.userIsOnCheckoutPage();
-    });
-    await test.step("AND User input checkout information", async () => {
-      await checkoutPage.userInputCheckoutInformation(
-        data.firstName,
-        data.lastName,
-        data.postalCode,
-      );
-    });
-    await test.step("AND User click continue button", async () => {
-      await checkoutPage.userClickContinueButton();
-    });
-    await test.step("AND User verify checkout overview", async () => {
-      await checkoutOverviewPage.userIsOnCheckoutOverviewPage();
-      await checkoutOverviewPage.verifyProductInCheckoutOverview(
-        productDetailPage.ProductName,
-      );
-    });
-    await test.step("AND User finish checkout", async () => {
-      await checkoutOverviewPage.userFinishCheckout();
-    });
-    await test.step("AND User is on finish checkout page", async () => {
-      await finishCheckoutPage.userIsOnFinishCheckoutPage();
-    });
-  });
-});
+for (const orderData of checkoutData) {
+  test(
+    "User add product from product detail page : " +
+      orderData.productname +
+      " @test",
+    async ({ page }) => {
+      const productList2Page = new ProductList2Page(page);
+      const productDetailPage = new ProductDetailPage(page);
+      const checkoutPage = new CheckoutPage(page);
+      const checkoutOverviewPage = new CheckoutOverviewPage(page);
+      const finishCheckoutPage = new FinishCheckoutPage(page);
+      const data = generateRandomData();
+      const cartPage = new CartPage(page);
+      await test.step("GIVEN User is on product list page", async () => {
+        await productList2Page.userIsOnProductList2Page();
+      });
+      await test.step("WHEN User add product to cart", async () => {
+        await productList2Page.goToProductDetailPage(orderData.productname);
+        await productDetailPage.userIsOnProductDetailPage(productList2Page.ProductName);
+        await productDetailPage.addProductToCart();
+        await productDetailPage.goToCartPage();
+        await cartPage.userIsOnCartPage();
+        await cartPage.verifyProductInCart(
+          productDetailPage.ProductName,
+          productDetailPage.ProductPrice,
+        );
+        await test.step("AND User click checkout button", async () => {
+          await cartPage.userClickCheckoutButton();
+          await checkoutPage.userIsOnCheckoutPage();
+        });
+        await test.step("AND User input checkout information", async () => {
+          await checkoutPage.userInputCheckoutInformation(
+            data.firstName,
+            data.lastName,
+            data.postalCode,
+          );
+        });
+        await test.step("AND User click continue button", async () => {
+          await checkoutPage.userClickContinueButton();
+        });
+        await test.step("AND User verify checkout overview", async () => {
+          await checkoutOverviewPage.userIsOnCheckoutOverviewPage();
+          await checkoutOverviewPage.verifyProductInCheckoutOverview(
+            productDetailPage.ProductName,
+          );
+        });
+        await test.step("AND User finish checkout", async () => {
+          await checkoutOverviewPage.userFinishCheckout();
+        });
+        await test.step("AND User is on finish checkout page", async () => {
+          await finishCheckoutPage.userIsOnFinishCheckoutPage();
+        });
+      });
+    },
+  );
+}

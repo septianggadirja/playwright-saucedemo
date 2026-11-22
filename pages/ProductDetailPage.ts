@@ -19,12 +19,13 @@ export class ProductDetailPage {
     this.buttonCart = page.locator('[data-test="shopping-cart-link"]');
   }
 
-  async userIsOnProductDetailPage() {
-    await expect(this.textProductName).toBeVisible();
+  async userIsOnProductDetailPage(ProductName: string) {
+    await expect(this.page).toHaveURL(/inventory-item.html\?id=/);
+    await expect(this.buttonBackToProducts).toBeVisible();
+    await expect(this.textProductName.filter({ hasText: ProductName })).toBeVisible();
     await expect(this.textProductPrice).toBeVisible();
     await expect(this.buttonAddToCart).toBeVisible();
-    await expect(this.buttonBackToProducts).toBeVisible();
-    const productName = await this.textProductName.textContent();
+    const productName = await this.textProductName.filter({ hasText: ProductName }).textContent();
     console.log("Product Name: " + productName);
     const productPrice = await this.textProductPrice.textContent();
     console.log("Product Price: " + productPrice);
